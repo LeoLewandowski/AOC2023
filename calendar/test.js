@@ -8,16 +8,24 @@ module.exports = {
         console.log(ranges);
 
         for (let list of lists) {
+            let test = new Map();
             for (let line of list) {
                 console.log('---------------------------------------\nline : ',line);
                 for (let i = 0; i < ranges.length; i++) {
                     var res = overlappingRanges(ranges[i], line);
+                    res.forEach(r => {
+                        if(!(test.get(r[0]) >= r[1])){
+                            test.set(r[0], r[1]);
+                            test.delete(ranges[i][0]);
+                        }
+                    })
                     console.log(ranges[i], ' --> ', res, '\n');
                     ranges[i] = res.shift();
                     ranges = ranges.concat(res);
                 }
                 console.log(ranges);
             }
+            console.log('map : ', test);
         }
 
         console.log(ranges);

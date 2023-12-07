@@ -5,15 +5,9 @@ module.exports = {
         var seeds = string.match(/(?<=seeds: ).+/)[0].split(' ').filter(x => x).map(y => parseInt(y));
         var ranges = string.match(/(?<=seeds: ).+/)[0].match(/[0-9]+ [0-9]+/g).map(r => r.split(' ').map(x => parseInt(x)));
 
-        // string.match(/(?<=seeds: ).+/)[0].match(/[0-9]+ [0-9]+/g).forEach(r => {
-        //     var range = r.split(' ').map(x => parseInt(x));
-        //     let x = [];
-        //     for(let i = 0; i < range[1]; i++) x.push(i + range[0]);
-        //     seedRanges.push(x);
-        // });
-
         for (let list of lists) {
             var nextSeeds = [...seeds], nextRanges = [];
+            var test = new Map();
 
             for (let j = 0; j < seeds.length; j++) {
                 for (let line of list) {
@@ -30,7 +24,13 @@ module.exports = {
                 var nextRange = [ranges[i]];
                 for (let line of list) {
                     var res = overlappingRanges(ranges[i], line);
-                    if(res.length == 1 && res[0][0] == ranges[i][0]) continue;       
+                    res.forEach(r => {
+                        if(!(test.get(r[0]) >= r[1])){
+                            if(r[1] == ranges[i]) test.delete(ranges[i][0]);
+                            test.set(r[0], r[1]);
+                        }
+                    })
+                    if(res.length == 1 && res[0][0] == ranges[i][0]) continue;
                     nextRange = res;
                     break;
                 }
@@ -38,6 +38,7 @@ module.exports = {
             }
             seeds = nextSeeds;
             ranges = nextRanges;
+            console.log(test, ranges);
         }
 
         var result2 = ranges.reduce((a, c) => Math.min(a, c[0]), Infinity);
