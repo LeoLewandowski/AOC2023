@@ -1,5 +1,3 @@
-const { TIMEOUT } = require("dns");
-
 module.exports = {
     desc:'Camel cards',
     execute(string) {
@@ -36,7 +34,7 @@ let Part = false; // False for 1, true for 2
  * Returns the given hand's type
  * @param {string} hand 
  */
-function getHandType(hand,test = false){
+function getHandType(hand){
     
     let cards = new Map(), jokers = 0;
     for(let i = 0; i < hand.length; i++){
