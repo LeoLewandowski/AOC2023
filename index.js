@@ -39,7 +39,7 @@ function askInput(day) {
 function launchDay() {
     rl.question('\nType a day\'s number to launch its program, or `calendar` to get a list of the days\nType `e` or `exit` to close this program\n --> ', input => {
         if (input == 'e' || input == 'exit') return process.exit();
-        else if (input == 'calendar') printCalendar();
+        else if (input == 'calendar' || input == 'c') printCalendar();
         else if (days.get(input)) askInput(input);
         else {
             console.log('Answer not acceptable\n')
