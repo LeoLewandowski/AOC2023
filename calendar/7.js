@@ -15,7 +15,6 @@ module.exports = {
         for(let i = 0; i < hands.length; i++) total += hands[i][1] * (i+1);
 
         Part = true;
-        console.log('----------------PART 2---------------------')
 
         hands.sort((a,b) => {
             var d = getHandType(a[0]) - getHandType(b[0]);

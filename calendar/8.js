@@ -11,7 +11,6 @@ module.exports = {
         let steps = findNodePath('AAA', paths, instructions, (n) => n == 'ZZZ');
 
         let ghostSteps = [], nodes = Array.from(paths.entries()).filter(n => n[0].match(/[0-9A-Z]{2}A/)).map(n => n[0]);
-        console.log(nodes);
 
         for(let i = 0; i < nodes.length; i++) ghostSteps.push(findNodePath(nodes[i], paths, instructions, (n) => n[2] == 'Z'));
         ghostSteps = ghostSteps.reduce((a,b) => lcm(a,b));
