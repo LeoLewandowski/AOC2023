@@ -5,14 +5,14 @@ module.exports = {
         let total = 0, secondTotal = 0;
         for (let i = 0; i < mountains.length; i++) {
             const mountain = mountains[i];
-            // console.log('\n\n----------------------------- Mountain -----------------------------');
+            console.log('\n\n----------------------------- Mountain -----------------------------');
             let mirror = findMirror(mountain);
-            // console.log('part 1 : ');
-            // showMountain(mountain,mirror);
+            console.log('part 1 : ');
+            showMountain(mountain,mirror);
             total += mirror[1] * mirror[2];
             mirror = findMirror(mountain, 1);
-            // console.log('part 2 : ');
-            // showMountain(mountain,mirror);
+            console.log('part 2 : ');
+            showMountain(mountain,mirror);
             secondTotal += mirror[1] * mirror[2];
         }
         return [total, secondTotal];
