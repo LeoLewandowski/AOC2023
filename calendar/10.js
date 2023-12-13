@@ -3,7 +3,7 @@ module.exports = {
     execute(input) {
         field, floodField = [];
         var counter = 1;
-        let pos = [-1, -1], diff = [1,0], previousPos;
+        let pos = [-1, -1], diff = [1,0], dir = [0, 1], previousPos;
 
         field = input.split('\r\n').map(l => {
             if(pos[0] < 0){
@@ -26,10 +26,13 @@ module.exports = {
         else if(pos[1] > 0 && getPipe([pos[0], pos[1] - 1]).match(/[|F7]/)) pos[1]--;
         setCell(pos, getPipe(pos));
 
+        /* Pipe follow Algorithm */
         while(getPipe(pos) != 'S'){
             diff = [pos[0] - previousPos[0], pos[1] - previousPos[1]];
             previousPos = pos;
             pos = getNextNeighbor(pos,diff);
+            let test = rotateDir(diff,'left');
+            floodField[previousPos[1] + test[1]][previousPos[0] + test[1]] += 'X';
             setCell(pos, getPipe(pos));
             counter++;
         }
@@ -37,8 +40,16 @@ module.exports = {
         const middlePos = [Math.floor(field[0].length/2),Math.floor(field.length/2)];
 
         printField();
-        console.log(getPipe(middlePos));
-        floodFill(middlePos);
+        for(let y = 0; y < floodField.length; y++){
+            for(let x = 0; x < floodField[0].length; x++) {
+                if(getPipe([x,y],floodField).includes('.X')){
+                    console.log(x,y);
+                    floodFill([x,y],true);
+                }
+            }
+        }
+        // console.log(getPipe(middlePos));
+        // floodFill(middlePos);
         printField();
 
         return [counter / 2,floodField.reduce((a,c) => a += c.reduce((b,d) => b += (d == '.X' ? 1 : 0),0),0)];
@@ -74,18 +85,17 @@ function getPipe(pos,f = field){
 
 let i = 0;
 
-function floodFill(pos,fromUp,fromLeft){
+function floodFill(pos, force = false){
     var p = getPipe(pos,floodField);
     i++;
-    // console.log(i, pos, p);
     if(pos[0] < 0
         || pos[0] > field[0].length - 1
         || pos[1] < 0
         || pos[1] > field.length - 1
-        || p.includes('X')
+        || (p.includes('X') && !force)
         || p.includes('S')
         ) return;
-    
+    console.log('fill !')
     floodField[pos[1]][pos[0]] += 'X';
 
     if(p != '|' && p != 'J' && p != '7') floodFill([pos[0] + 1, pos[1]]);
@@ -108,10 +118,34 @@ function printField(){
             if(i == field.length/2 && j == field[0].length/2) s += '\x1b[35m';
             else if(p.match(/[J7LF|-]/)) s += '\x1b[32m';
             else if(p.includes('S')) s += '\x1b[31m';
-            if(p.includes('X') /*&& !p.match(/[J7LF|-]/)*/) s += '\x1b[100m';
+            if(p.includes('X') && !p.match(/[J7LF|-]/)) s += '\x1b[100m';
             s += p[0] + '\x1b[0m';
         }
         s += '\n';
     }
     console.log(s.replace(/F/g,'┌').replace(/J/g,'┘').replace(/7/g,'┐').replace(/L/g,'└').replace(/-/g,'─').replace(/\|/g,'│'));
+}
+
+/**
+ * 
+ * @param {number[]} dir 
+ * @param {'left'|'right'|'invert'} angle 
+ */
+function rotateDir(direction, angle){
+    let tmp, dir = [...direction];
+    if(angle == 'left'){
+        tmp = dir[1];
+        dir[1] = -dir[0];
+        dir[0] = tmp;
+    }
+    if(angle == 'right'){
+        tmp = dir[1];
+        dir[1] = dir[0];
+        dir[0] = -tmp;
+    }
+    if(angle == 'invert'){
+        dir[1] = -dir[1];
+        dir[0] = -dir[0];
+    }
+    return dir;
 }
