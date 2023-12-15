@@ -1,5 +1,3 @@
-const { exec } = require("child_process");
-
 module.exports = {
     desc: 'Rocks !',
     execute(input) {
@@ -12,16 +10,19 @@ module.exports = {
         let i = 0;
         for (i; i < IT_NB; i++) {
             let str = platformSpin.join('');
-            if (Cache.get(str)) {
+            let test = Cache.get(str);
+            if (test) {
                 if (str == LoopPlatform) break;
                 if (!LoopSize) LoopPlatform = str;
+                platformSpin = [...test];
                 LoopSize++;
+                continue;
             }
             rollRocksNorth();
             rollRocksWest();
             rollRocksSouth();
             rollRocksEast();
-            Cache.set(str, true);
+            Cache.set(str, [...platformSpin]);
         }
         for (let j = 0; j < (IT_NB - i) % LoopSize; j++) {
             rollRocksNorth();
