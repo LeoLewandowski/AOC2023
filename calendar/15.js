@@ -1,6 +1,7 @@
 module.exports = {
     desc: 'Hash ?!',
     execute(input) {
+        const Boxes = [];
         let totalPart1 = 0, totalPart2 = 0;
         input.split(',').forEach(s => {
             if (!s) return;
@@ -26,9 +27,6 @@ module.exports = {
         return [totalPart1, totalPart2];
     }
 }
-
-/**@type {Map<string,number>[]} */
-const Boxes = [];
 
 function hash(s) {
     let strVal = 0;
