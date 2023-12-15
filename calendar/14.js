@@ -1,8 +1,10 @@
 const { exec } = require("child_process");
 
 module.exports = {
-    desc: 'Mirror',
+    desc: 'Rocks !',
     execute(input) {
+        const Cache = new Map();
+        let LoopSize = 0, LoopPlatform;
         platformSpin = input.split('\r\n');
         let platform = [...platformSpin];
         rollRocksNorth(platform);
@@ -34,8 +36,6 @@ module.exports = {
 var platformSpin
 
 const IT_NB = 1_000_000_000;
-const Cache = new Map();
-let LoopSize = 0, LoopPlatform;
 
 function rollRocksNorth(p = platformSpin) {
     for (let y = 0; y < p.length; y++) {
