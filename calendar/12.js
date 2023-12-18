@@ -3,22 +3,38 @@ module.exports = {
     execute(input) {
         let lengths = [], springs = [];
         input.split('\r\n').forEach(line => {
-            console.log('----------------------------- Line ---------------------------\n', line)
             let lengthsLine = line.split(' ');
             let springsLine = lengthsLine.shift();
             lengthsLine = lengthsLine[0].split(',').map(n => parseInt(n));
 
             let possibleSpaces = Array.from(springsLine.matchAll(/\?/g)).map(x => x.index);
-            let springsToPlace = lengthsLine.reduce((a,c) => a += c) - (springsLine.match(/#/g)?.length);
+            let springsToPlace = lengthsLine.reduce((a,c) => a += c) - (springsLine.match(/#/g)?.length || 0);
 
             placeSpring(springsLine, lengthsLine, possibleSpaces, springsToPlace);
-            console.log(totalPart1);
         });
-        return [totalPart1, NaN];
+        
+        let totalPart1 = total;
+        total = 0;
+
+        input.split('\r\n').forEach(line => {
+            let lengthsLine = line.split(' ');
+            let springsLine = (lengthsLine.shift() + '?').repeat(5);
+            springsLine = springsLine.slice(0, springsLine.length - 1);
+            lengthsLine = (lengthsLine[0] + ',').repeat(5).split(',').filter(x => x).map(n => parseInt(n));
+            
+            console.log(lengthsLine, springsLine);
+
+            let possibleSpaces = Array.from(springsLine.matchAll(/\?/g)).map(x => x.index);
+            let springsToPlace = lengthsLine.reduce((a,c) => a += c) - (springsLine.match(/#/g)?.length || 0);
+
+            placeSpring(springsLine, lengthsLine, possibleSpaces, springsToPlace);
+        });
+
+        return [totalPart1, total];
     }
 }
 
-let totalPart1 = 0;
+let total = 0;
 
 function isValidRow(springs, lengths) {
     let match = springs.match(/[#]+/g);
@@ -26,7 +42,7 @@ function isValidRow(springs, lengths) {
     for (let i = 0; i < lengths.length; i++) {
         if (match[i].length != lengths[i]) return false;
     }
-    return totalPart1++;
+    return total++;
 }
 
 function placeSpring(springs, lengths, possibleSpaces, springsToPlace) {

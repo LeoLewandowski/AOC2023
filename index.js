@@ -19,15 +19,15 @@ function printCalendar() {
     return launchDay();
 }
 
-function askInput(day) {
-    rl.question('Give a .txt file path for this module (or anything else for fallback to default file) :\n --> ', a => {
+async function askInput(day) {
+    rl.question('Give a .txt file path for this module (or anything else for fallback to default file) :\n --> ',async a => {
         if (!fs.existsSync(a)) {
             console.log('Not a valid path ! Fallback to default file\n');
             a = `./txt/${day}.txt`;
         }
-        fs.readFile(a, (e, data) => {
+        fs.readFile(a, async (e, data) => {
             let t = Date.now();
-            const result = days.get(day).execute(data.toString())
+            const result = await days.get(day).execute(data.toString())
             let t2 = Date.now();
             console.log(`Part 1 : \x1b[32m${result[0]}\x1b[0m\nPart 2 : \x1b[32m${result[1]}\x1b[0m\nTime taken : ${t2 - t}ms\n\nType 'Enter' to continue...`);
         });
